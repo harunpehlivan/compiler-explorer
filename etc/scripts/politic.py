@@ -39,9 +39,8 @@ def check_policy_file(police_name):
         return
     policy_last_commit = subprocess.check_output(['git', 'log', '-1', '--format=%h', policy_path]).decode('utf-8').rstrip()
     print(f'Setting policy {policy_path} last updated time to {policy_last_time} with commit {policy_last_commit}')
-    f = open(policy_path, 'r')
-    file_lines = f.readlines()
-    f.close()
+    with open(policy_path, 'r') as f:
+        file_lines = f.readlines()
     with open(policy_path, 'w') as f:
         for line in file_lines:
             if re.match(date_placeholder_regex, line):

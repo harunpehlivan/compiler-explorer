@@ -157,8 +157,7 @@ def strip_non_instr(i):
 
 
 def instr_name(i):
-    match = INSTRUCTION_RE.match(strip_non_instr(i))
-    if match:
+    if match := INSTRUCTION_RE.match(strip_non_instr(i)):
         return match.group(1)
 
 
@@ -170,8 +169,8 @@ def get_description_paragraphs(document_soup):
     while i < MAX_DESC_PARAS and len(description_paragraph_node.text) > 20:
         if description_paragraph_node.name == "p":
             description_paragraphs.append(description_paragraph_node)
-            i = i + 1
-            # Move two siblings forward. Next sibling is the line feed.
+            i += 1
+                    # Move two siblings forward. Next sibling is the line feed.
         description_paragraph_node = description_paragraph_node.next_sibling.next_sibling
     return description_paragraphs
 
@@ -186,8 +185,7 @@ def parse(filename, f):
 
     def add_all(instrs):
         for i in instrs:
-            instruction_name = instr_name(i)
-            if instruction_name:
+            if instruction_name := instr_name(i):
                 names.add(instruction_name)
 
     for inst in table:
@@ -245,11 +243,10 @@ def read_table(table):
     if headers:
         # common case
         for row in table.find_all('tr'):
-            obj = {}
-            for column, name in zip(row.find_all('td'), headers):
-                # Remove '\n's in names that contain it.
-                obj[name.replace('\n', '')] = column.get_text()
-            if obj:
+            if obj := {
+                name.replace('\n', ''): column.get_text()
+                for column, name in zip(row.find_all('td'), headers)
+            }:
                 result.append(obj)
     else:
         # Cases like BEXTR and BZHI

@@ -78,8 +78,7 @@ def extract_asm_doc_archive(downloadfolder, inputfolder):
     tar.extractall(path=inputfolder)
 
 def instr_name(i):
-    match = INSTRUCTION_RE.match(strip_non_instr(i))
-    if match:
+    if match := INSTRUCTION_RE.match(strip_non_instr(i)):
         return match.group(1)
 
 
